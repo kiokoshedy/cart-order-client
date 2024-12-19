@@ -36,11 +36,11 @@ jobs:
       - name: Log in to DockerHub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.kiokos }}
-          password: ${{ secrets.dckr_pat_Q3Cwd5yfuwn_oP9VurvmBvtIKIk }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push Docker Image to DockerHub
-        run: docker push ${{ secrets.kiokos }}/cart-order-client:latest
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/cart-order-client:latest
 
       - name: Deploy to DigitalOcean
         uses: appleboy/ssh-action@v0.1.3
@@ -49,7 +49,7 @@ jobs:
           username: ${{ secrets.DIGITALOCEAN_USER }}
           key: ${{ secrets.DIGITALOCEAN_SSH_KEY }}
           script: |
-            docker pull ${{ secrets.kiokos }}/cart-order-client:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/cart-order-client:latest
             docker stop cart-order-client || true
             docker rm cart-order-client || true
-            docker run -d -p 80:80 --name cart-order-client ${{ secrets.kiokos }}/cart-order-client:latest
+            docker run -d -p 80:80 --name cart-order-client ${{ secrets.DOCKER_USERNAME }}/cart-order-client:latest
