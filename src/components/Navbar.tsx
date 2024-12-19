@@ -12,7 +12,9 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ pageName, cart, onLogout }) => {
   const navigate = useNavigate();
-  const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+
+  // Count unique products in the cart
+  const totalProducts = cart.length;
 
   return (
     <AppBar position="static">
@@ -21,7 +23,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageName, cart, onLogout }) => {
           {pageName}
         </Typography>
         <IconButton color="inherit" onClick={() => navigate('/cart')}>
-          <Badge badgeContent={totalItems} color="error">
+          <Badge badgeContent={totalProducts} color="error">
             <ShoppingCartIcon />
           </Badge>
         </IconButton>
