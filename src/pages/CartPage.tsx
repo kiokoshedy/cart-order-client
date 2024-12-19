@@ -30,7 +30,7 @@ const CartPage: React.FC<CartPageProps> = ({ cart, setCart, setOrders }) => {
           Your Cart
         </Typography>
         {cart.length === 0 ? (
-          <Typography>Your cart is empty. Add some products!</Typography>
+          <Typography>Your cart is empty!</Typography>
         ) : (
           <>
             <List>
