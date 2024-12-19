@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  react-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3030:80" # Map port 3030 on the host to port 80 in the container
+    container_name: cart-order-client
