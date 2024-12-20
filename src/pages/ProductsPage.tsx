@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Container,
-  Typography,
-  Grid,
-  Card,
-  CardContent,
-  CardActions,
-  TextField,
-  Button,
-} from '@mui/material';
+import { Container, Typography, Grid, Card, CardContent, CardActions, TextField, Button } from '@mui/material';
 import { Product } from '../App';
 
 interface ProductsPageProps {
@@ -17,9 +8,9 @@ interface ProductsPageProps {
 }
 
 const products: Product[] = [
-  { id: 1, name: 'Product 1', price: 100 },
-  { id: 2, name: 'Product 2', price: 200 },
-  { id: 3, name: 'Product 3', price: 300 },
+  { id: 1, name: 'Product 1', price: 100, quantity: 1 },
+  { id: 2, name: 'Product 2', price: 200, quantity: 1 },
+  { id: 3, name: 'Product 3', price: 300, quantity: 1 },
 ];
 
 const ProductsPage: React.FC<ProductsPageProps> = ({ cart, setCart }) => {
@@ -31,9 +22,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ cart, setCart }) => {
     if (existingProduct) {
       setCart(
         cart.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: (item.quantity || 1) + quantity }
-            : item
+          item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
         )
       );
     } else {
@@ -47,44 +36,28 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ cart, setCart }) => {
 
   return (
     <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Available Products
+      <Typography variant="h4" gutterBottom align="center">
+        Products
       </Typography>
       <Grid container spacing={4}>
         {products.map((product) => (
           <Grid item xs={12} sm={6} md={4} key={product.id}>
-            <Card
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                height: '100%',
-              }}
-            >
+            <Card>
               <CardContent>
-                <Typography variant="h6" component="div" gutterBottom>
-                  {product.name}
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Price: ${product.price}
-                </Typography>
+                <Typography variant="h6">{product.name}</Typography>
+                <Typography variant="body2">Price: ${product.price}</Typography>
                 <TextField
-                  label="Quantity"
                   type="number"
+                  label="Quantity"
                   value={quantities[product.id] || 1}
-                  onChange={(e) => handleQuantityChange(product.id, +e.target.value)}
+                  onChange={(e) => handleQuantityChange(product.id, parseInt(e.target.value))}
                   fullWidth
                   sx={{ mt: 2 }}
-                  InputProps={{ inputProps: { min: 1 } }}
+                  inputProps={{ min: 1 }}
                 />
               </CardContent>
               <CardActions>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  onClick={() => handleAddToCart(product)}
-                >
+                <Button variant="contained" onClick={() => handleAddToCart(product)} fullWidth>
                   Add to Cart
                 </Button>
               </CardActions>

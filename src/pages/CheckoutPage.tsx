@@ -1,25 +1,32 @@
 import React from 'react';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
-import { Container, Box, Typography } from '@mui/material';
+import { Container, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Product } from '../App';
+import { Product, Order } from '../App';
 
 interface CheckoutPageProps {
   cart: Product[];
   setCart: React.Dispatch<React.SetStateAction<Product[]>>;
-  setOrders: React.Dispatch<React.SetStateAction<Product[]>>;
+  setOrders: React.Dispatch<React.SetStateAction<Order[]>>;
 }
 
 const CheckoutPage: React.FC<CheckoutPageProps> = ({ cart, setCart, setOrders }) => {
   const navigate = useNavigate();
-  const totalAmount = cart.reduce((total, item) => total + item.price * (item.quantity || 1), 0);
+  const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const handlePaymentSuccess = (details: any) => {
-    console.log('Payment Approved: ', details);
-    setOrders((prevOrders) => [...prevOrders, ...cart]);
+    console.log('Payment Successful: ', details);
+
+    const newOrders: Order[] = cart.map((item) => ({
+      ...item,
+      total: item.price * item.quantity,
+      date: new Date().toISOString(),
+    }));
+
+    setOrders((prevOrders) => [...prevOrders, ...newOrders]);
     setCart([]);
     alert('Payment completed successfully!');
-    navigate('/orders'); // Redirect to Orders Page
+    navigate('/orders');
   };
 
   return (
@@ -34,15 +41,15 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ cart, setCart, setOrders })
           <Typography variant="h4" gutterBottom>
             Checkout
           </Typography>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" gutterBottom >
             Total Amount: ${totalAmount.toFixed(2)}
           </Typography>
           <Box sx={{ mt: 4 }}>
             <Typography variant="h6" gutterBottom>
-              Pay with:
+              Pay with :
             </Typography>
             <PayPalButtons
-              style={{ layout: 'vertical', color: 'blue' }}
+              style={{ layout: 'vertical' }}
               createOrder={(data, actions) => {
                 return actions.order.create({
                   purchase_units: [
@@ -58,8 +65,8 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ cart, setCart, setOrders })
               }}
               onApprove={(data, actions) => {
                 if (!actions.order) {
-                  alert('Order actions are not available.');
-                  return Promise.reject('Order actions are undefined');
+                  console.error('Order actions not available.');
+                  return Promise.reject('Order actions are undefined.');
                 }
                 return actions.order.capture().then((details) => {
                   handlePaymentSuccess(details);

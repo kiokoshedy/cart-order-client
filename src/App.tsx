@@ -11,10 +11,13 @@ export interface Product {
   id: number;
   name: string;
   price: number;
-  quantity?: number;
+  quantity: number;
 }
 
-export interface Order extends Product {}
+export interface Order extends Product {
+  total: number;
+  date: string;
+}
 
 const App: React.FC = () => {
   const [cart, setCart] = useState<Product[]>([]);
@@ -23,16 +26,18 @@ const App: React.FC = () => {
 
   const handleLogout = () => {
     setToken(null);
+    setCart([]);
   };
 
   return (
     <Router>
+      {token && <Navbar cart={cart} onLogout={handleLogout} />}
       <Routes>
         <Route
           path="/login"
           element={
             token ? (
-              <Navigate to="/products" />
+              <Navigate to="/products" replace />
             ) : (
               <LoginPage onLoginSuccess={(newToken: string) => setToken(newToken)} />
             )
@@ -42,12 +47,9 @@ const App: React.FC = () => {
           path="/products"
           element={
             token ? (
-              <>
-                <Navbar pageName="Products" cart={cart} onLogout={handleLogout} />
-                <ProductsPage cart={cart} setCart={setCart} />
-              </>
+              <ProductsPage cart={cart} setCart={setCart} />
             ) : (
-              <Navigate to="/login" />
+              <Navigate to="/login" replace />
             )
           }
         />
@@ -55,12 +57,9 @@ const App: React.FC = () => {
           path="/cart"
           element={
             token ? (
-              <>
-                <Navbar pageName="Cart" cart={cart} onLogout={handleLogout} />
-                <CartPage cart={cart} setCart={setCart} setOrders={setOrders} />
-              </>
+              <CartPage cart={cart} setCart={setCart} setOrders={setOrders} />
             ) : (
-              <Navigate to="/login" />
+              <Navigate to="/login" replace />
             )
           }
         />
@@ -68,12 +67,9 @@ const App: React.FC = () => {
           path="/checkout"
           element={
             token ? (
-              <>
-                <Navbar pageName="Checkout" cart={cart} onLogout={handleLogout} />
-                <CheckoutPage cart={cart} setCart={setCart} setOrders={setOrders} />
-              </>
+              <CheckoutPage cart={cart} setCart={setCart} setOrders={setOrders} />
             ) : (
-              <Navigate to="/login" />
+              <Navigate to="/login" replace />
             )
           }
         />
@@ -81,16 +77,13 @@ const App: React.FC = () => {
           path="/orders"
           element={
             token ? (
-              <>
-                <Navbar pageName="Orders" cart={cart} onLogout={handleLogout} />
-                <OrdersPage orders={orders} />
-              </>
+              <OrdersPage orders={orders} />
             ) : (
-              <Navigate to="/login" />
+              <Navigate to="/login" replace />
             )
           }
         />
-        <Route path="*" element={<Navigate to={token ? '/products' : '/login'} />} />
+        <Route path="*" element={<Navigate to={token ? '/products' : '/login'} replace />} />
       </Routes>
     </Router>
   );

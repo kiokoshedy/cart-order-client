@@ -1,33 +1,41 @@
 import React from 'react';
-import { Container, Box, Typography, List, ListItem, ListItemText } from '@mui/material';
-import { Product } from '../App';
+import { Container, Typography, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Order } from '../App';
 
 interface OrdersPageProps {
-  orders: Product[];
+  orders: Order[];
 }
 
 const OrdersPage: React.FC<OrdersPageProps> = ({ orders }) => {
   return (
-    <Container>
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Your Orders
-        </Typography>
-        {orders.length === 0 ? (
-          <Typography>No orders placed yet.</Typography>
-        ) : (
-          <List>
+    <Container sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        Your Orders
+      </Typography>
+      {orders.length === 0 ? (
+        <Typography variant="body1">You have no orders yet. Place an order to see it here!</Typography>
+      ) : (
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Order Date</TableCell>
+              <TableCell>Product</TableCell>
+              <TableCell>Quantity</TableCell>
+              <TableCell>Total</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {orders.map((order, index) => (
-              <ListItem key={index} divider>
-                <ListItemText
-                  primary={`${order.name} | Quantity: ${order.quantity}`}
-                  secondary={`Price: $${order.price * (order.quantity || 1)}`}
-                />
-              </ListItem>
+              <TableRow key={index}>
+                <TableCell>{new Date(order.date).toLocaleString()}</TableCell>
+                <TableCell>{order.name}</TableCell>
+                <TableCell>{order.quantity}</TableCell>
+                <TableCell>${order.total.toFixed(2)}</TableCell>
+              </TableRow>
             ))}
-          </List>
-        )}
-      </Box>
+          </TableBody>
+        </Table>
+      )}
     </Container>
   );
 };

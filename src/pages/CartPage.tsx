@@ -1,8 +1,8 @@
 import React from 'react';
-import { Container, Box, Typography, List, ListItem, ListItemText, IconButton, Button } from '@mui/material';
+import { Container, Typography, Table, TableBody, TableCell, TableHead, TableRow, IconButton, Button, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useNavigate } from 'react-router-dom';
 import { Product } from '../App';
+import { useNavigate } from 'react-router-dom';
 
 interface CartPageProps {
   cart: Product[];
@@ -11,50 +11,86 @@ interface CartPageProps {
 }
 
 const CartPage: React.FC<CartPageProps> = ({ cart, setCart, setOrders }) => {
+  const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const navigate = useNavigate();
 
-  const handleRemoveFromCart = (productId: number) => {
-    setCart(cart.filter((item) => item.id !== productId));
+  const handleRemove = (id: number) => {
+    setCart(cart.filter((item) => item.id !== id));
   };
+
+  // const handleCheckout = () => {
+  //   setOrders((prev) => [
+  //     ...prev,
+  //     ...cart.map((item) => ({
+  //       ...item,
+  //       total: item.price * item.quantity,
+  //       date: new Date().toISOString(),
+  //     })),
+  //   ]);
+  //   setCart([]);
+  // };
 
   const handleProceedToCheckout = () => {
     navigate('/checkout');
   };
 
-  const totalAmount = cart.reduce((total, item) => total + item.price * (item.quantity || 1), 0);
-
   return (
     <Container>
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Your Cart
-        </Typography>
-        {cart.length === 0 ? (
-          <Typography>Your cart is empty!</Typography>
-        ) : (
-          <>
-            <List>
+      <Typography variant="h4" gutterBottom>
+        Your Cart
+      </Typography>
+      {cart.length === 0 ? (
+        <Typography variant="body1">Your cart is empty!</Typography>
+      ) : (
+        <>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Product</TableCell>
+                <TableCell sx={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Quantity</TableCell>
+                <TableCell sx={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Price</TableCell>
+                <TableCell sx={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {cart.map((item) => (
-                <ListItem key={item.id} divider>
-                  <ListItemText
-                    primary={`${item.name} | Quantity: ${item.quantity}`}
-                    secondary={`Price: $${item.price * (item.quantity || 1)}`}
-                  />
-                  <IconButton aria-label="delete" onClick={() => handleRemoveFromCart(item.id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </ListItem>
+                <TableRow key={item.id}>
+                  <TableCell sx={{ fontSize: '1.1rem' }}>{item.name}</TableCell>
+                  <TableCell sx={{ fontSize: '1.1rem' }}>{item.quantity}</TableCell>
+                  <TableCell sx={{ fontSize: '1.1rem' }}> ${(item.price * item.quantity).toFixed(2)}</TableCell>
+                  <TableCell>
+                    <IconButton onClick={() => handleRemove(item.id)} color="error">
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
               ))}
-            </List>
-            <Typography variant="h6" sx={{ mt: 2 }}>
-              Total Amount: ${totalAmount.toFixed(2)}
+            </TableBody>
+          </Table>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              mt: 3,
+            }}
+          >
+            <Typography variant="h5" sx={{ fontSize: '1.2rem' , fontWeight: 'bold'}}>
+              Total: ${totalAmount.toFixed(2)}
             </Typography>
-            <Button variant="contained" color="primary" onClick={handleProceedToCheckout} sx={{ mt: 4 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleProceedToCheckout}
+              sx={{
+                textTransform: 'none',
+              }}
+            >
               Proceed to Checkout
             </Button>
-          </>
-        )}
-      </Box>
+          </Box>
+        </>
+      )}
     </Container>
   );
 };
