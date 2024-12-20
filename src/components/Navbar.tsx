@@ -23,17 +23,20 @@ const Navbar: React.FC<NavbarProps> = ({ cart, onLogout }) => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static"
+    sx={{
+      backgroundColor: '#1976d2', // Change this color code for custom background color
+    }}>
       <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1, cursor: 'pointer' }} onClick={() => navigate('/products')}>
+        <Typography variant="h6" sx={{ flexGrow: 1, cursor: 'pointer',color: 'black', fontWeight: 'bold', fontFamily: 'inherit'}} onClick={() => navigate('/products')}>
           DUKA
         </Typography>
-        <IconButton color="inherit" onClick={handleCartClick}>
+        <IconButton color="warning" onClick={handleCartClick}>
           <Badge badgeContent={cart.length} color="error">
             <ShoppingCartIcon />
           </Badge>
         </IconButton>
-        <IconButton color="inherit" onClick={handleLogoutClick}>
+        <IconButton color="error" onClick={handleLogoutClick}>
           <LogoutIcon />
         </IconButton>
       </Toolbar>
