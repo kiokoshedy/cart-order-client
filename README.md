@@ -9,7 +9,7 @@
 ##### **Prerequisites**
 
 - Node.js >= 18.x and npm
-- Docker (optional, for containerized setup)
+- Docker
 
 ---
 
