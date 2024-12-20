@@ -1,32 +1,41 @@
 import React from 'react';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { Container, Typography, Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { Product, Order } from '../App';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { CartProduct, Order } from '../../types';
 
 interface CheckoutPageProps {
-  cart: Product[];
-  setCart: React.Dispatch<React.SetStateAction<Product[]>>;
+  cart: CartProduct[];
+  setCart: React.Dispatch<React.SetStateAction<CartProduct[]>>;
   setOrders: React.Dispatch<React.SetStateAction<Order[]>>;
 }
 
 const CheckoutPage: React.FC<CheckoutPageProps> = ({ cart, setCart, setOrders }) => {
   const navigate = useNavigate();
-  const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const location = useLocation();
+  const totalAmount = location.state?.totalAmount || 0; // Retrieve totalAmount from Cart
 
   const handlePaymentSuccess = (details: any) => {
     console.log('Payment Successful: ', details);
 
-    const newOrders: Order[] = cart.map((item) => ({
-      ...item,
-      total: item.price * item.quantity,
-      date: new Date().toISOString(),
-    }));
+    const newOrder: Order = {
+      id: Date.now(), // Generate a unique order ID
+      status: 'Completed', // Order status
+      total_amount: totalAmount, // Total amount paid
+      items: cart.map((item) => ({
+        id: item.id,
+        order_id: Date.now(),
+        product_id: item.id,
+        product_name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+    };
 
-    setOrders((prevOrders) => [...prevOrders, ...newOrders]);
-    setCart([]);
+    setOrders((prevOrders) => [...prevOrders, newOrder]); // Add the new order
+    setCart([]); // Clear the cart after successful payment
     alert('Payment completed successfully!');
-    navigate('/orders');
+    navigate('/orders'); // Navigate to orders page immediately
   };
 
   return (
@@ -41,13 +50,10 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ cart, setCart, setOrders })
           <Typography variant="h4" gutterBottom>
             Checkout
           </Typography>
-          <Typography variant="h6" gutterBottom >
+          <Typography variant="h6" gutterBottom>
             Total Amount: ${totalAmount.toFixed(2)}
           </Typography>
           <Box sx={{ mt: 4 }}>
-            <Typography variant="h6" gutterBottom>
-              Pay with :
-            </Typography>
             <PayPalButtons
               style={{ layout: 'vertical' }}
               createOrder={(data, actions) => {
@@ -60,7 +66,7 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ cart, setCart, setOrders })
                       },
                     },
                   ],
-                  intent: 'CAPTURE'
+                  intent: 'CAPTURE',
                 });
               }}
               onApprove={(data, actions) => {

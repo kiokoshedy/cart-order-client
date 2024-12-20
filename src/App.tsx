@@ -1,90 +1,37 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import ProductsPage from './pages/ProductsPage';
-import CartPage from './pages/CartPage';
-import OrdersPage from './pages/OrdersPage';
-import LoginPage from './pages/LoginPage';
-import CheckoutPage from './pages/CheckoutPage';
-import Navbar from './components/Navbar';
-
-export interface Product {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-export interface Order extends Product {
-  total: number;
-  date: string;
-}
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
+import ProductList from './components/Products/ProductList';
+import Cart from './components/Cart/Cart';
+import Navbar from './components/Auth/Navbar';
+import { CartProduct, Order } from './types';
+import CheckoutPage from './components/Cart/CheckoutPage';
+import OrdersPage from './components/Products/OrdersPage';
 
 const App: React.FC = () => {
-  const [cart, setCart] = useState<Product[]>([]);
+
+  const [cart, setCart] = useState<CartProduct[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [token, setToken] = useState<string | null>(null);
 
-  const handleLogout = () => {
-    setToken(null);
-    setCart([]);
-  };
-
+  
   return (
     <Router>
-      {token && <Navbar cart={cart} onLogout={handleLogout} />}
-      <Routes>
-        <Route
-          path="/login"
-          element={
-            token ? (
-              <Navigate to="/products" replace />
-            ) : (
-              <LoginPage onLoginSuccess={(newToken: string) => setToken(newToken)} />
-            )
-          }
-        />
-        <Route
-          path="/products"
-          element={
-            token ? (
-              <ProductsPage cart={cart} setCart={setCart} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-        <Route
-          path="/cart"
-          element={
-            token ? (
-              <CartPage cart={cart} setCart={setCart} setOrders={setOrders} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-        <Route
-          path="/checkout"
-          element={
-            token ? (
-              <CheckoutPage cart={cart} setCart={setCart} setOrders={setOrders} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-        <Route
-          path="/orders"
-          element={
-            token ? (
-              <OrdersPage orders={orders} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-        <Route path="*" element={<Navigate to={token ? '/products' : '/login'} replace />} />
-      </Routes>
+      <div>
+      <Navbar />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/products" element={<ProductList />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<CheckoutPage cart={[]} setCart={function (value: React.SetStateAction<CartProduct[]>): void {
+            throw new Error('Function not implemented.');
+          } } setOrders={function (value: React.SetStateAction<Order[]>): void {
+            throw new Error('Function not implemented.');
+          } } />} />
+          <Route path="/orders" element={<OrdersPage orders={orders} />} />
+        </Routes>
+      </div>
     </Router>
   );
 };

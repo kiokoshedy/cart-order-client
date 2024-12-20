@@ -1,17 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
+import './index.css';
 import App from './App';
-import { createTheme, ThemeProvider, CssBaseline } from '@mui/material';
+import { CartProvider } from './context/CartContext';
 
-const theme = createTheme({
-  // Customize your theme here if you want,
-  // For now it’s the default MUI theme with baseline styles
-});
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <ThemeProvider theme={theme}>
-    <CssBaseline />
-    <App />
-  </ThemeProvider>
+ReactDOM.render(
+  <React.StrictMode>
+    <CartProvider>
+      <App />
+    </CartProvider>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
