@@ -73,6 +73,15 @@ const Login: React.FC = () => {
           >
             Login
           </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            sx={{ mt: 2 }}
+            onClick={() => navigate('/register')}
+          >
+            Register
+          </Button>
         </Box>
       </Paper>
     </Container>
