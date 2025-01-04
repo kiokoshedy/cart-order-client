@@ -37,7 +37,6 @@ const ProductList: React.FC = () => {
   const handleAddToCart = async (product: Product) => {
     const quantity = quantities[product.id] || 1; // Default to 1 if not specified
     await addToCart(product, quantity);
-   // alert(`${product.name} (x${quantity}) has been added to your cart!`);
   };
 
   return (
