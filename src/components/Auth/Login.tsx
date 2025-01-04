@@ -64,24 +64,22 @@ const Login: React.FC = () => {
               />
             </Grid>
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            sx={{ mt: 3 }}
-          >
-            Login
-          </Button>
-          <Button
-            fullWidth
-            variant="contained"
-            color="secondary"
-            sx={{ mt: 2 }}
-            onClick={() => navigate('/register')}
-          >
-            Register
-          </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 20, mt: 3 }}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
+              Login
+            </Button>
+            <Button
+              variant="outlined"
+              color="success"
+              onClick={() => navigate('/register')}
+            >
+              Register
+            </Button>
+          </Box>
         </Box>
       </Paper>
     </Container>

@@ -78,9 +78,10 @@ const Register: React.FC = () => {
               />
             </Grid>
           </Grid>
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 20, mt: 3 }}>
           <Button
             type="submit"
-            fullWidth
+            
             variant="contained"
             color="primary"
             sx={{ mt: 3 }}
@@ -88,14 +89,15 @@ const Register: React.FC = () => {
             Register
           </Button>
           <Button
-            fullWidth
-            variant="contained"
-            color="secondary"
+            
+            variant="outlined"
+            color="success"
             sx={{ mt: 2 }}
             onClick={() => navigate('/login')}
           >
             Login
           </Button>
+          </Box>
         </Box>
       </Paper>
       <Snackbar open={open} autoHideDuration={2000}>
