@@ -41,7 +41,7 @@ const ProductList: React.FC = () => {
 
   return (
     <Container maxWidth="xl" sx={{ mt: 5 }}>
-      <Typography variant="h3" gutterBottom align="center">
+      <Typography variant="h4" gutterBottom align="center">
         Our Products
       </Typography>
       <Grid container spacing={4}>
