@@ -40,13 +40,13 @@ const ProductList: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 5 }}>
+    <Container maxWidth="xl" sx={{ mt: 5 }}>
       <Typography variant="h3" gutterBottom align="center">
         Our Products
       </Typography>
       <Grid container spacing={4}>
         {products.map((product) => (
-          <Grid item xs={12} sm={6} md={4} key={product.id}>
+          <Grid item xs={12} sm={6} md={3} key={product.id}>
             <Card>
               {product.image_url && (
                 <CardMedia

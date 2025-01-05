@@ -3,6 +3,8 @@ import { AppBar, Toolbar, Typography, IconButton, Badge, Button } from '@mui/mat
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
+import LogoutIcon from '@mui/icons-material/Logout';
+
 
 const Navbar: React.FC = () => {
   const { cart } = useCart();
@@ -25,13 +27,13 @@ const Navbar: React.FC = () => {
         {/* Cart Icon with Badge */}
         <IconButton color="inherit" onClick={() => navigate('/cart')}>
           <Badge badgeContent={cart.length} color="secondary">
-            <ShoppingCartIcon />
+            <ShoppingCartIcon  />
           </Badge>
         </IconButton>
 
         {/* Logout Button */}
         <Button color="inherit" onClick={handleLogout}>
-          Logout
+          <LogoutIcon color='error'/>
         </Button>
       </Toolbar>
     </AppBar>

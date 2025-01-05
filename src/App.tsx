@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useState, ReactNode } from 'react';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import ProductList from './components/Products/ProductList';
@@ -14,11 +14,25 @@ const App: React.FC = () => {
   const [cart, setCart] = useState<CartProduct[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
 
-  
+  interface LayoutProps {
+    children: ReactNode;
+  }
+
+  const Layout: React.FC<LayoutProps> = ({ children }) => {
+    const location = useLocation();
+    const hideNavbar = ['/login', '/register'].includes(location.pathname);
+
+    return (
+      <div>
+        {!hideNavbar && <Navbar />}
+        {children}
+      </div>
+    );
+  };
+
   return (
     <Router>
-      <div>
-      <Navbar />
+      <Layout>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -31,7 +45,7 @@ const App: React.FC = () => {
           } } />} />
           <Route path="/orders" element={<OrdersPage orders={orders} />} />
         </Routes>
-      </div>
+      </Layout>
     </Router>
   );
 };
